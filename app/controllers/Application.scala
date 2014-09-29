@@ -114,7 +114,7 @@ object Application extends Controller {
   }
 
   def oauthCallback(code: String) = Action.async {
-    val url = "https://login.salesforce.com/services/oauth2/token"
+    val url = "https://test.salesforce.com/services/oauth2/token"
 
     val wsFuture = WS.url(url).withQueryString(
       "grant_type" -> "authorization_code",
