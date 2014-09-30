@@ -29,6 +29,7 @@ object Application extends Controller {
   val consumerKey = Play.current.configuration.getString("force.oauth.consumer-key").get
   val consumerSecret = Play.current.configuration.getString("force.oauth.consumer-secret").get
   val redirectUri = Play.current.configuration.getString("force.oauth.redirect-uri").get
+  val authServer = Play.current.configuration.getString("force.oauth.auth-server").get
 
   case class Error(message: String, code: Option[String] = None)
   object Error {
@@ -54,7 +55,7 @@ object Application extends Controller {
       Redirect(routes.Application.app())
     }
     else {
-      Ok(views.html.index(consumerKey, redirectUri))
+      Ok(views.html.index(consumerKey, redirectUri, authServer))
     }
   }
 
@@ -114,7 +115,7 @@ object Application extends Controller {
   }
 
   def oauthCallback(code: String) = Action.async {
-    val url = "https://test.salesforce.com/services/oauth2/token"
+    val url = authServer + "/services/oauth2/token"
 
     val wsFuture = WS.url(url).withQueryString(
       "grant_type" -> "authorization_code",
